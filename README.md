@@ -4,20 +4,7 @@ A hospital management system API that handles user authentication (doctors, rece
 
 ---
 
-## 📋 Table of Contents
-
-1. [Project Overview](#1-project-overview)
-2. [Project Structure](#2-project-structure)
-3. [Setup Instructions](#3-setup-instructions)
-4. [API Endpoints](#4-api-endpoints)
-5. [Database Design](#5-database-design)
-6. [Environment Configuration](#6-environment-configuration)
-7. [Middlewares](#7-middlewares)
-8. [Conclusion](#8-conclusion)
-
----
-
-## 1. Project Overview
+## Project Overview
 
 **Project Name**: Hospital Portal API  
 **Description**: A hospital management system API built with Go. It provides an interface for doctors and receptionists to manage patient data, authenticate users, and interact with the hospital database securely.  
@@ -31,7 +18,7 @@ A hospital management system API that handles user authentication (doctors, rece
 
 ---
 
-## 2. Project Structure
+## Project Structure and Other Details
 
 ```plaintext
 hospital-portal/
@@ -68,23 +55,21 @@ hospital-portal/
 
 ---
 
-## 3. Setup Instructions
+Setup Instructions
 
-### Pre-requisites:
+Pre-requisites:
 - Docker installed
 - Go installed
 - PostgreSQL running (through Docker)
 
-### Steps to Run:
+Steps to Run:
 
-1. **Clone the Repository**  
-```bash
+1. Clone the Repository
 git clone https://github.com/srinivasarynh/hospital-portal.git
 cd hospital-portal
 
 
-2. **Create `.env` file** in the root directory with the following content:
-```env
+2. Create `.env` file in the root directory with the following content:
 DB_HOST=localhost
 DB_PORT=5432
 DB_USER=postgres
@@ -92,52 +77,45 @@ DB_PASS=your_password
 DB_NAME=hospital_db
 JWT_SECRET=your_jwt_secret
 
-3. **Start Docker containers** (if using Docker for PostgreSQL and app):
-```bash
+3. Start Docker containers (if using Docker for PostgreSQL and app):
 docker-compose up --build
 
-4. **Run the application locally** (if not using Docker):
-```bash
+4. Run the application locally (if not using Docker):
 go run main.go
 
-5. **Seeding Data** (if using Docker for PostgreSQL and app):
-```bash
+5. Seeding Data (if using Docker for PostgreSQL and app):
 docker exec -it hospital_backend go run cmd/cli/main.go --seed
 
-6. **Seeding Data** (if not using Docker):
-```bash
+6. Seeding Data (if not using Docker):
 go run cmd/cli/main.go --seed
 
 ---
 
-## 4. API Endpoints
+API Endpoints
 
-### 🔐 Authentication
+🔐 Authentication
 
-#### `POST /auth/login`
+`POST /auth/login`
 Authenticate a user and return a JWT token.
 
-**Request:**
-```json
+Request:
 {
   "username": "receptionist1", // username for doctor "doctor1"
   "password": "receptionistpassword" // password for doctor "doctorpassword"
 }
 
-*Response:**
-```json
+Response:
 {
   "token": "your_jwt_token"
 }
 
 
-### 👩‍⚕️ Receptionist Endpoints
+👩‍⚕️ Receptionist Endpoints
 
-#### `POST /reception/patients`
+`POST /reception/patients`
 Creates a new patient record.
 
-**Request:**
-```json
+Request:
 {
   "full_name": "John Doe",
   "age": 30,
@@ -146,14 +124,13 @@ Creates a new patient record.
   "notes": "Needs immediate attention"
 }
 
-*Response:**
+Response:
 Status 201 - Created
 
-#### `GET /reception/patients`
+`GET /reception/patients`
 Retrieves a list of all patients.
 
-**Response:**
-```json
+Response:
 [
   {
     "id": 1,
@@ -166,11 +143,10 @@ Retrieves a list of all patients.
   ...
 ]
 
-#### `GET /reception/patients/:id`
+`GET /reception/patients/:id`
 Retrieves a specific patient record by ID.
 
-**Response:**
-```json
+Response:
 {
   "id": 1,
   "full_name": "John Doe",
@@ -181,11 +157,10 @@ Retrieves a specific patient record by ID.
 }
 
 
-#### `PUT /reception/patients/:id`
+`PUT /reception/patients/:id`
 Description: Updates patient details by ID.
 
-**Request:**
-```json
+Request:
 {
   "full_name": "John Doe",
   "age": 46,
@@ -195,23 +170,21 @@ Description: Updates patient details by ID.
 }
 
 
-#### `DELETE /reception/patients/:id`
+`DELETE /reception/patients/:id`
 Description: Deletes a patient record by ID.
 
-**Response:**
-```json
+Response:
 {
   "message": "Patient record deleted successfully"
 }
 
 
-### 👩‍⚕️ Doctor Endpoints
+👩‍⚕️ Doctor Endpoints
 
-#### `GET /doctor/patients`
+`GET /doctor/patients`
 Description: Retrieves a list of all patients.
 
-**Response:**
-```json
+Response:
 [
   {
     "id": 1,
@@ -224,11 +197,10 @@ Description: Retrieves a list of all patients.
   ...
 ]
 
-#### `GET /doctor/patients/:id`
+`GET /doctor/patients/:id`
 Description: Retrieves a specific patient record by ID.
 
-**Response:**
-```json
+Response:
 {
   "id": 1,
   "full_name": "John Doe",
@@ -238,11 +210,10 @@ Description: Retrieves a specific patient record by ID.
   "notes": "Patient needs urgent attention"
 }
 
-#### `PUT /doctor/patients/:id`
+`PUT /doctor/patients/:id`
 Description: Updates patient details by ID.
 
-**Request:**
-```json
+Request:
 {
   "full_name": "John Doe",
   "age": 46,
@@ -252,25 +223,24 @@ Description: Updates patient details by ID.
 }
 
 
-#### `PATCH /doctor/patients/:id/notes`
+`PATCH /doctor/patients/:id/notes`
 Description: Updates a patient's notes.
 
-**Request:**
-```json
+Request:
 {
   "notes": "Patient's condition is worsening"
 }
 
 ---
 
-## 5. Database Design
+Database Design
 
-### User Model:
+User Model:
 - `Username` (unique)
 - `Password` (hashed)
 - `Role` (doctor/receptionist)
 
-### Patient Model:
+Patient Model:
 - `Full Name`
 - `Age`
 - `Gender`
@@ -278,29 +248,29 @@ Description: Updates a patient's notes.
 - `Notes`
 - `Registered At` (auto-generated)
 
-### Relationships:
+Relationships:
 - One-to-many relationship between users and patients (e.g., doctors managing patients).
 
 ---
 
-## 6. Environment Configuration
+Environment Configuration
 
-### .env Configuration:
-- **DB_HOST**: Host of your PostgreSQL database.
-- **DB_PORT**: Port for PostgreSQL.
-- **DB_USER**: Database username.
-- **DB_PASS**: Database password.
-- **DB_NAME**: Database name.
-- **JWT_SECRET**: Secret for JWT token signing.
+.env Configuration:
+- DB_HOST: Host of your PostgreSQL database.
+- DB_PORT: Port for PostgreSQL.
+- DB_USER: Database username.
+- DB_PASS: Database password.
+- DB_NAME: Database name.
+- JWT_SECRET: Secret for JWT token signing.
 
 ---
 
-## 7. Middlewares
+Middlewares
 
-### Auth Middleware
+Auth Middleware
 The Auth Middleware is used to ensure that the user is authenticated and authorized to perform certain actions. It checks the JWT token passed in the request header and ensures the role is correct (e.g., "doctor" or "receptionist").
 
 ---
 
-## 8. Conclusion
+Conclusion
 This Hospital Portal API provides essential functionalities for managing patients, doctor-receptionist roles, and authentication. The API is built with Go and PostgreSQL and is secured with JWT for authentication. You can expand the system further by adding features like patient appointments, notifications, and more.
